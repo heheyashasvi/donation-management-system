@@ -87,3 +87,11 @@ Admins have a dedicated dashboard that aggregates data directly from the verifie
 - **Password Hashing**: BCrypt used for storing passwords.
 - **Environment Variables**: API keys and secrets stored in `.env`.
 - **Protected Routes**: Middleware and Server Session checks ensure only authenticated users access dashboards.
+
+## 6. User Features
+
+### 6.1 User Profile
+A dedicated profile page (`/dashboard/profile`) provides a comprehensive view of the user's journey.
+- **Personal Details**: Displays Name, Email, Role, and Member Since date.
+- **Impact Summary**: Aggregates total donation amount across all successful transactions.
+- **Full-Width Design**: Utilizes a modern, responsive full-width layout for an immersive experience.
