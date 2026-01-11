@@ -2,6 +2,7 @@ import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { LayoutDashboard, LogOut, Shield, Heart, User } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -25,6 +26,7 @@ export default async function DashboardLayout({
                         </Link>
                         <div className="space-x-4 text-sm text-gray-400">
                             <Link href="/dashboard/user" className="hover:text-white transition">My Dashboard</Link>
+                            <Link href="/dashboard/profile" className="hover:text-white transition">Profile</Link>
                             {(session.user as any).role === "ADMIN" && (
                                 <Link href="/dashboard/admin" className="hover:text-white transition">Admin Panel</Link>
                             )}
