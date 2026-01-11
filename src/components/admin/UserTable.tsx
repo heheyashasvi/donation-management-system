@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Search } from "lucide-react";
+import { Download, Search, ChevronUp, ChevronDown } from "lucide-react";
 
 interface User {
     id: string;
@@ -9,6 +9,7 @@ interface User {
     email: string;
     role: string;
     createdAt: Date;
+    totalDonated: number;
     _count: {
         donations: number;
     };
@@ -17,6 +18,7 @@ interface User {
 export function UserTable({ initialUsers }: { initialUsers: User[] }) {
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("ALL");
+    const [sortConfig, setSortConfig] = useState<{ key: keyof User | 'donationsCount', direction: 'asc' | 'desc' } | null>(null);
 
     const filteredUsers = initialUsers.filter((user) => {
         const matchesSearch = (user.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
@@ -25,10 +27,34 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
         return matchesSearch && matchesRole;
     });
 
+    const sortedUsers = [...filteredUsers].sort((a, b) => {
+        if (!sortConfig) return 0;
+
+        let aValue: any = a[sortConfig.key as keyof User];
+        let bValue: any = b[sortConfig.key as keyof User];
+
+        if (sortConfig.key === 'donationsCount') {
+            aValue = a._count.donations;
+            bValue = b._count.donations;
+        }
+
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    const handleSort = (key: keyof User | 'donationsCount') => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
     const handleExport = () => {
-        const headers = ["ID,Name,Email,Role,Joined,Donations"];
-        const rows = filteredUsers.map(u =>
-            `${u.id},"${u.name || ''}",${u.email},${u.role},${new Date(u.createdAt).toISOString()},${u._count.donations}`
+        const headers = ["ID,Name,Email,Role,Joined,Donations,Total Donated"];
+        const rows = sortedUsers.map(u =>
+            `${u.id},"${u.name || ''}",${u.email},${u.role},${new Date(u.createdAt).toISOString()},${u._count.donations},${u.totalDonated}`
         );
 
         const csvContent = "data:text/csv;charset=utf-8," + headers.concat(rows).join("\n");
@@ -39,6 +65,11 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    const SortIcon = ({ columnKey }: { columnKey: string }) => {
+        if (sortConfig?.key !== columnKey) return <div className="w-4 h-4" />;
+        return sortConfig.direction === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />;
     };
 
     return (
@@ -74,18 +105,19 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
             <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-800/50 text-gray-400 uppercase">
+                        <thead className="bg-gray-800/50 text-gray-400 uppercase select-none">
                             <tr>
-                                <th className="px-6 py-3">Name</th>
-                                <th className="px-6 py-3">Email</th>
-                                <th className="px-6 py-3">Role</th>
-                                <th className="px-6 py-3">Joined</th>
-                                <th className="px-6 py-3">Donations</th>
+                                <th onClick={() => handleSort('name')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Name <SortIcon columnKey="name" /></div></th>
+                                <th onClick={() => handleSort('email')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Email <SortIcon columnKey="email" /></div></th>
+                                <th onClick={() => handleSort('role')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Role <SortIcon columnKey="role" /></div></th>
+                                <th onClick={() => handleSort('createdAt')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Joined <SortIcon columnKey="createdAt" /></div></th>
+                                <th onClick={() => handleSort('donationsCount')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Donations <SortIcon columnKey="donationsCount" /></div></th>
+                                <th onClick={() => handleSort('totalDonated')} className="px-6 py-3 cursor-pointer hover:bg-gray-800 transition"><div className="flex items-center gap-2">Total (₹) <SortIcon columnKey="totalDonated" /></div></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-800">
-                            {filteredUsers.length > 0 ? (
-                                filteredUsers.map((u) => (
+                            {sortedUsers.length > 0 ? (
+                                sortedUsers.map((u) => (
                                     <tr key={u.id} className="hover:bg-gray-800/30">
                                         <td className="px-6 py-3 font-medium text-white">{u.name || "N/A"}</td>
                                         <td className="px-6 py-3 text-gray-300">{u.email}</td>
@@ -95,12 +127,13 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                                         </td>
                                         <td className="px-6 py-3 text-gray-400">{new Date(u.createdAt).toLocaleDateString()}</td>
                                         <td className="px-6 py-3 text-gray-400">{u._count.donations}</td>
+                                        <td className="px-6 py-3 text-green-400 font-medium">₹{u.totalDonated.toFixed(2)}</td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                                        No users found matching "{search}"
+                                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                                        No users found matching filters
                                     </td>
                                 </tr>
                             )}
@@ -109,7 +142,7 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                 </div>
             </div>
             <div className="text-sm text-gray-500">
-                Showing {filteredUsers.length} of {initialUsers.length} users
+                Showing {sortedUsers.length} of {initialUsers.length} users
             </div>
         </div>
     );

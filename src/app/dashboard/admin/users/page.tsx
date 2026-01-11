@@ -10,10 +10,20 @@ export default async function AdminUsersPage() {
     const session = await getServerSession(authOptions);
     if (!session || (session.user as any).role !== "ADMIN") redirect("/dashboard/user");
 
-    const users = await prisma.user.findMany({
+    const rawUsers = await prisma.user.findMany({
         orderBy: { createdAt: "desc" },
-        include: { _count: { select: { donations: true } } }
+        include: {
+            _count: { select: { donations: true } },
+            donations: {
+                select: { amount: true, status: true }
+            }
+        }
     });
+
+    const users = rawUsers.map((u: any) => ({
+        ...u,
+        totalDonated: u.donations.reduce((sum: number, d: any) => d.status === "SUCCESS" ? sum + d.amount : sum, 0)
+    }));
 
     return (
         <div className="space-y-6">

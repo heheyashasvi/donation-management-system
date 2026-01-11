@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
                     </div>
                     <div>
                         <p className="text-gray-400 text-sm">Total Donations</p>
-                        <p className="text-2xl font-bold">${totalDonations._sum.amount?.toFixed(2) || "0.00"}</p>
+                        <p className="text-2xl font-bold">₹{totalDonations._sum.amount?.toFixed(2) || "0.00"}</p>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@ export default async function AdminDashboard() {
                             {recentDonations.map((d: any) => (
                                 <tr key={d.id} className="hover:bg-gray-800/30">
                                     <td className="px-6 py-3">{d.user.name || d.user.email}</td>
-                                    <td className="px-6 py-3 font-medium">${d.amount}</td>
+                                    <td className="px-6 py-3 font-medium">₹{d.amount}</td>
                                     <td className="px-6 py-3">
                                         <span className={`px-2 py-1 rounded-full text-xs ${d.status === "SUCCESS" ? "bg-green-500/10 text-green-400" :
                                             d.status === "PENDING" ? "bg-yellow-500/10 text-yellow-400" :
