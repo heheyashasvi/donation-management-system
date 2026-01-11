@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { UserTable } from "@/components/admin/UserTable";
 
 export default async function AdminUsersPage() {
     const session = await getServerSession(authOptions);
@@ -26,35 +27,7 @@ export default async function AdminUsersPage() {
                 </div>
             </div>
 
-            <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-800/50 text-gray-400 uppercase">
-                            <tr>
-                                <th className="px-6 py-3">Name</th>
-                                <th className="px-6 py-3">Email</th>
-                                <th className="px-6 py-3">Role</th>
-                                <th className="px-6 py-3">Joined</th>
-                                <th className="px-6 py-3">Donations</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-800">
-                            {users.map((u: any) => (
-                                <tr key={u.id} className="hover:bg-gray-800/30">
-                                    <td className="px-6 py-3 font-medium text-white">{u.name}</td>
-                                    <td className="px-6 py-3 text-gray-300">{u.email}</td>
-                                    <td className="px-6 py-3">
-                                        <span className={`px-2 py-1 rounded-full text-xs ${u.role === "ADMIN" ? "bg-purple-500/10 text-purple-400" : "bg-gray-700 text-gray-300"
-                                            }`}>{u.role}</span>
-                                    </td>
-                                    <td className="px-6 py-3 text-gray-400">{new Date(u.createdAt).toLocaleDateString()}</td>
-                                    <td className="px-6 py-3 text-gray-400">{u._count.donations}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <UserTable initialUsers={users} />
         </div>
     );
 }

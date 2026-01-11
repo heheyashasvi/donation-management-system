@@ -10,7 +10,7 @@ The HopeConnect platform is built using a modern, scalable web architecture desi
 - **Database**: SQLite (via Prisma ORM) - Lightweight, portable relational database for storing user and donation records.
 - **Data Access Layer**: Prisma ORM - Type-safe database client.
 - **Authentication**: NextAuth.js - Handles secure user sessions using Credentials provider (Email/Password) and JWT strategies.
-- **Payments**: Stripe (Test Mode) - Handles secure payment processing via Checkout Sessions and Webhooks.
+- **Payments**: Razorpay (Test Mode) - Handles secure payment processing via Orders and Client-side Checkout.
 - **Styling**: Tailwind CSS - Modern, responsive, and accessible UI design.
 
 ### 1.2 Architecture Diagram (Conceptual)
@@ -21,9 +21,11 @@ graph TD
     NextApp -->|API Call| API[API Routes]
     API -->|Query| Prisma[Prisma ORM]
     Prisma -->|Read/Write| DB[(SQLite Database)]
-    API -->|Create Session| Stripe[Stripe API]
-    Stripe -->|Webhook Event| WebhookHandler[API/Webhooks]
-    WebhookHandler -->|Update Status| Prisma
+    API -->|Create Order| Razorpay[Razorpay API]
+    Razorpay -->|Order ID| API
+    User -->|Payment Info| RazorpayClient[Razorpay Modal]
+    RazorpayClient -->|Verification| API
+    API -->|Update Status| Prisma
 ```
 
 ## 2. Database Schema
@@ -46,7 +48,7 @@ Stores payment attempts and history. Linked to User but managed separately.
 - **id**: Unique Identifier (CUID)
 - **amount**: Donation amount in USD
 - **status**: Payment state (`PENDING`, `SUCCESS`, `FAILED`)
-- **stripeSessionId**: Reference to Stripe session
+- **stripeSessionId**: Reference to Razorpay Order ID (Note: Field name retained for schema stability)
 - **userId**: Foreign Key linking to User
 - **createdAt**: Timestamp of initiation
 
@@ -60,13 +62,13 @@ Stores payment attempts and history. Linked to User but managed separately.
 ### 3.1 Separation of Concerns
 Registration and Donation flows are completely decoupled.
 - **Registration**: `/register` -> API -> DB (User created).
-- **Donation**: `/donate` -> API -> Stripe Checkout.
+- **Donation**: `/donate` -> API -> Razorpay Order.
 This ensures that "user data is saved regardless of payment outcome" as required.
 
 ### 3.2 Secure Payment Handling
-- **No storage of card details**: All sensitivity payment data is handled by Stripe's hosted checkout page.
-- **Server-Side Validation**: Inputs (amounts) are validated on the server before creating sessions.
-- **Webhook Verification**: Payment success is only recorded when Stripe sends a cryptographically signed webhook event (`checkout.session.completed`). This prevents "fake success" by manipulating client-side URLs.
+- **No storage of card details**: All sensitivity payment data is handled by Razorpay's secure modal.
+- **Server-Side Order Creation**: Orders are created on the server to prevent amount manipulation.
+- **Signature Verification**: Payment success is verified on the server using HMAC-SHA256 signature verification. This prevents "fake success" by forcing valid cryptographic proof from Razorpay.
 
 ### 3.3 Admin Visibility
 Admins have a dedicated dashboard that aggregates data directly from the verified database records.
@@ -74,11 +76,11 @@ Admins have a dedicated dashboard that aggregates data directly from the verifie
 - **User Management**: verification of registration data.
 
 ## 4. Payment Flow & Rules
-1.  **Initiation**: User selects amount. System creates `PENDING` donation in DB.
-2.  **Processing**: User is redirected to Stripe.
+1.  **Initiation**: User selects amount. System creates `PENDING` donation in DB and Razorpay Order.
+2.  **Processing**: User completes payment via Razorpay Modal.
 3.  **Completion**:
-    *   **Success**: Stripe charges card. Stripe calls Webhook. System updates DB status to `SUCCESS`.
-    *   **Failure/Cancel**: User cancels. DB status remains `PENDING` (or can be marked `FAILED` via webhook).
+    *   **Success**: Razorpay returns success signature. API verifies signature. System updates DB status to `SUCCESS`.
+    *   **Failure/Cancel**: User cancels. DB status remains `PENDING`.
 4.  **Verification**: Admin sees the status in real-time.
 
 ## 5. Security Measures
