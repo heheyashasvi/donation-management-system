@@ -19,7 +19,7 @@ export default async function ProfilePage() {
 
     if (!user) redirect("/login");
 
-    const totalDonated = user.donations.reduce((sum, d) =>
+    const totalDonated = user.donations.reduce((sum: number, d: any) =>
         d.status === "SUCCESS" ? sum + d.amount : sum, 0
     );
 
