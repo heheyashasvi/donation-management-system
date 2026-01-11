@@ -26,30 +26,26 @@ export default async function ProfilePage() {
     return (
         <div className="max-w-5xl mx-auto space-y-8">
             {/* Profile Header with Banner */}
-            <div className="relative">
+            <div className="relative mb-20">
                 <div className="h-48 rounded-3xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 shadow-2xl relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                    <div className="absolute inset-0 bg-black/10"></div>
                 </div>
 
-                <div className="absolute -bottom-12 left-8 md:left-12 flex items-end gap-6">
+                <div className="absolute -bottom-12 left-8 flex items-end gap-6">
                     <div className="w-32 h-32 rounded-3xl bg-gray-950 p-2 shadow-xl ring-4 ring-gray-950/50">
                         <div className="w-full h-full bg-gray-900 rounded-2xl flex items-center justify-center text-4xl font-bold bg-gradient-to-br from-gray-800 to-gray-900 text-white">
                             {user.name?.[0]?.toUpperCase() || user.email[0].toUpperCase()}
                         </div>
                     </div>
-                    <div className="mb-4 hidden md:block">
-                        <h1 className="text-3xl font-bold text-white shadow-sm">{user.name || "User"}</h1>
-                        <p className="text-purple-200 font-medium">{user.email}</p>
-                    </div>
                 </div>
             </div>
 
-            <div className="pt-16 px-4 md:px-0 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="px-4 md:px-0 grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Left Column: Personal Info */}
                 <div className="space-y-6">
-                    <div className="md:hidden">
-                        <h1 className="text-2xl font-bold text-white">{user.name || "User"}</h1>
-                        <p className="text-gray-400">{user.email}</p>
+                    <div>
+                        <h1 className="text-3xl font-bold text-white">{user.name || "User"}</h1>
+                        <p className="text-purple-200 font-medium">{user.email}</p>
                     </div>
 
                     <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 space-y-6">
@@ -88,20 +84,23 @@ export default async function ProfilePage() {
 
                 {/* Right Column: Impact & Stats */}
                 <div className="md:col-span-2 space-y-6">
-                    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
-                            <Heart className="w-64 h-64 text-pink-500 fill-current" />
+                    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative overflow-hidden group min-h-[200px] flex flex-col justify-center">
+                        {/* Decorative Background Icon */}
+                        <div className="absolute -right-8 -bottom-8 opacity-5 transform rotate-12 pointer-events-none">
+                            <Heart className="w-48 h-48 text-pink-500 fill-current" />
                         </div>
 
                         <div className="relative z-10">
                             <h2 className="text-lg font-medium text-gray-400 mb-2">Total Impact</h2>
-                            <div className="flex items-baseline gap-2">
+                            <div className="flex items-baseline gap-3">
                                 <span className="text-5xl font-bold text-white tracking-tight">
                                     ₹{totalDonated.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                 </span>
-                                <span className="text-green-400 text-sm font-medium bg-green-500/10 px-2 py-1 rounded-full">
-                                    Extraordinary
-                                </span>
+                                {totalDonated > 0 && (
+                                    <span className="text-green-400 text-xs font-bold uppercase bg-green-500/10 px-2 py-1 rounded-full tracking-wide">
+                                        Supporter
+                                    </span>
+                                )}
                             </div>
                             <p className="mt-4 text-gray-400 max-w-lg">
                                 Your contributions have directly supported our mission. Thank you for making a difference.
@@ -109,7 +108,7 @@ export default async function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
                             <p className="text-sm text-gray-500 uppercase font-bold mb-2">Donations</p>
                             <p className="text-2xl font-bold text-white">{user.donations.length}</p>
