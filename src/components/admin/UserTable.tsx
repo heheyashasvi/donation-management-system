@@ -16,11 +16,14 @@ interface User {
 
 export function UserTable({ initialUsers }: { initialUsers: User[] }) {
     const [search, setSearch] = useState("");
+    const [roleFilter, setRoleFilter] = useState("ALL");
 
-    const filteredUsers = initialUsers.filter((user) =>
-        (user.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredUsers = initialUsers.filter((user) => {
+        const matchesSearch = (user.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
+            user.email.toLowerCase().includes(search.toLowerCase());
+        const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
+        return matchesSearch && matchesRole;
+    });
 
     const handleExport = () => {
         const headers = ["ID,Name,Email,Role,Joined,Donations"];
@@ -51,6 +54,15 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                         className="w-full bg-gray-900 border border-gray-800 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-purple-500"
                     />
                 </div>
+                <select
+                    value={roleFilter}
+                    onChange={(e) => setRoleFilter(e.target.value)}
+                    className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:border-purple-500 appearance-none"
+                >
+                    <option value="ALL">All Roles</option>
+                    <option value="USER">User</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
                 <button
                     onClick={handleExport}
                     className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition"
