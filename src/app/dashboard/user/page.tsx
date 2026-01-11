@@ -62,7 +62,7 @@ export default async function UserDashboard() {
                                             })}
                                         </td>
                                         <td className="px-6 py-4 font-medium text-white">
-                                            ${donation.amount.toFixed(2)}
+                                            ₹{donation.amount.toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${donation.status === "SUCCESS"
