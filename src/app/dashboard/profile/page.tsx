@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { User, Mail, Shield, Calendar, Heart } from "lucide-react";
+import { User, Mail, Shield, Calendar } from "lucide-react";
 
 export default async function ProfilePage() {
     const session = await getServerSession(authOptions);
@@ -85,10 +85,8 @@ export default async function ProfilePage() {
                 {/* Right Column: Impact & Stats */}
                 <div className="md:col-span-2 space-y-6">
                     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 relative overflow-hidden group min-h-[200px] flex flex-col justify-center">
-                        {/* Decorative Background Icon */}
-                        <div className="absolute -right-8 -bottom-8 opacity-5 transform rotate-12 pointer-events-none">
-                            <Heart className="w-48 h-48 text-pink-500 fill-current" />
-                        </div>
+                        {/* Decorative Background Icon Removed */}
+
 
                         <div className="relative z-10">
                             <h2 className="text-lg font-medium text-gray-400 mb-2">Total Impact</h2>

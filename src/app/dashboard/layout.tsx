@@ -2,7 +2,7 @@ import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { LayoutDashboard, LogOut, Shield, Heart, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Shield, User } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
