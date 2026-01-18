@@ -43,9 +43,9 @@ export default function Home() {
                             <Sparkles className="w-3 h-3" /> Because every child matters
                         </div>
                         <h1 className="text-6xl md:text-8xl font-black leading-[1.1] tracking-tight">
-                            Your Small Act is <br />
+                            Your Small <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">
-                                Their Big Hope.
+                                Act is Their Big Hope.
                             </span>
                         </h1>
                         <p className="text-xl text-gray-300 font-light leading-relaxed max-w-xl">
@@ -72,7 +72,7 @@ export default function Home() {
             </section>
 
             {/* Mission Section */}
-            <section className="py-20 px-6 relative overflow-hidden">
+            <section className="pt-20 pb-10 px-6 relative overflow-hidden">
                 <div className="container mx-auto">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
@@ -100,21 +100,26 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="relative group">
+                        <div className="relative group overflow-hidden rounded-3xl h-[400px]">
                             <div className="absolute -inset-4 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
                             <img
                                 src="/images/impact_community.png"
                                 alt="Community Support"
-                                className="relative rounded-3xl shadow-2xl border border-white/5"
+                                className="relative w-full h-full object-cover shadow-2xl border border-white/5"
                             />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Success Stories Section */}
-            <section className="py-20 px-6 bg-gray-900/30">
-                <div className="container mx-auto space-y-12">
+            {/* Stories Section with Captivating Background */}
+            <section className="py-20 px-6 relative overflow-hidden bg-gray-950">
+                <div className="absolute inset-0 z-0">
+                    <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-rose-950/20 to-gray-950 opacity-40" />
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rose-500/50 to-transparent" />
+                </div>
+
+                <div className="container mx-auto space-y-12 relative z-10">
                     <div className="text-center space-y-4 max-w-2xl mx-auto">
                         <h2 className="text-4xl font-bold">Stories of Change</h2>
                         <p className="text-gray-400">Because your donation represents more than money—it represents a new beginning for someone.</p>
