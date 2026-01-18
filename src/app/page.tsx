@@ -58,12 +58,6 @@ export default function Home() {
                             >
                                 Make a Difference <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
-                            <Link
-                                href="/login"
-                                className="px-10 py-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center"
-                            >
-                                See Our Stories
-                            </Link>
                         </div>
                     </div>
                 </div>
@@ -78,10 +72,10 @@ export default function Home() {
             </section>
 
             {/* Mission Section */}
-            <section className="py-32 px-6 relative overflow-hidden">
+            <section className="py-20 px-6 relative overflow-hidden">
                 <div className="container mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-20 items-center">
-                        <div className="space-y-8">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6">
                             <h2 className="text-4xl md:text-5xl font-bold leading-tight">
                                 We are on a mission to <br />
                                 <span className="text-rose-500 italic">heal the world</span> together.
@@ -119,8 +113,8 @@ export default function Home() {
             </section>
 
             {/* Success Stories Section */}
-            <section className="py-32 px-6 bg-gray-900/30">
-                <div className="container mx-auto space-y-16">
+            <section className="py-20 px-6 bg-gray-900/30">
+                <div className="container mx-auto space-y-12">
                     <div className="text-center space-y-4 max-w-2xl mx-auto">
                         <h2 className="text-4xl font-bold">Stories of Change</h2>
                         <p className="text-gray-400">Because your donation represents more than money—it represents a new beginning for someone.</p>
@@ -156,31 +150,6 @@ export default function Home() {
                                         <p className="text-sm text-gray-500">Mother of 3, Project Hope beneficiary</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Newsletter / CTA */}
-            <section className="py-40 px-6 text-center">
-                <div className="container mx-auto">
-                    <div className="max-w-4xl mx-auto space-y-12 bg-gradient-to-br from-rose-600 to-orange-600 p-20 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-                        <div className="relative z-10 space-y-6">
-                            <h2 className="text-5xl md:text-6xl font-black text-white">Join the Movement</h2>
-                            <p className="text-white/80 text-xl max-w-xl mx-auto font-light">
-                                Sign up to receive stories of impact and see how your contributions are changing lives around the world.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-                                <input
-                                    type="email"
-                                    placeholder="your@email.com"
-                                    className="bg-white/20 border border-white/20 rounded-2xl px-8 py-4 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 w-full sm:w-80"
-                                />
-                                <button className="bg-white text-rose-600 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-colors">
-                                    Subscribe
-                                </button>
                             </div>
                         </div>
                     </div>
