@@ -11,12 +11,19 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        const { amount } = await req.json();
+        const { amount: rawAmount } = await req.json();
+        const amount = parseFloat(rawAmount);
+
+        if (isNaN(amount) || amount <= 0) {
+            return NextResponse.json({ message: "Invalid amount" }, { status: 400 });
+        }
+
+        console.log("Initiating donation:", { amount, userId: (session.user as any).id });
 
         // Create pending donation
         const donation = await prisma.donation.create({
             data: {
-                amount: parseFloat(amount),
+                amount: amount,
                 userId: (session.user as any).id,
                 status: "PENDING",
                 currency: "INR",
@@ -24,11 +31,12 @@ export async function POST(req: Request) {
         });
 
         const options = {
-            amount: amount * 100, // Razorpay works in paise
+            amount: Math.round(amount * 100), // Razorpay works in paise, ensures integer
             currency: "INR",
             receipt: donation.id,
         };
 
+        console.log("Razorpay options:", options);
         const order = await razorpay.orders.create(options);
 
         // Update donation with order ID (using stripeSessionId field for now or adding a new field? 
