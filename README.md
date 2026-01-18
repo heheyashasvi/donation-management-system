@@ -2,7 +2,7 @@
 
 HopeConnect is a modern, full-stack web application designed for non-governmental organizations (NGOs) to manage user registrations and donations seamlessly. The platform ensures that user record-keeping is decoupled from payment processing, guaranteeing that user data is preserved regardless of the transaction outcome.
 
-## 🚀 Features
+##  Features
 
 -   **User Authentication**: Secure registration and login using NextAuth.js.
 -   **Donation Management**: Integrated with Razorpay for secure and transparent payment processing.
@@ -11,7 +11,7 @@ HopeConnect is a modern, full-stack web application designed for non-governmenta
 -   **Responsive Design**: Built with Tailwind CSS for a seamless experience across all devices.
 -   **Data Integrity**: Clear separation between users and donation records.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 -   **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
 -   **Language**: [TypeScript](https://www.typescriptlang.org/)
@@ -22,12 +22,12 @@ HopeConnect is a modern, full-stack web application designed for non-governmenta
 -   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 -   **Icons**: [Lucide React](https://lucide.dev/)
 
-## ⚙️ Prerequisites
+##  Prerequisites
 
 -   [Node.js](https://nodejs.org/) (v18 or higher)
 -   [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-## 🏎️ Getting Started
+##  Getting Started
 
 ### 1. Clone the repository
 ```bash
@@ -75,7 +75,7 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📁 Project Structure
+##  Project Structure
 
 - `src/app`: Next.js pages and API routes.
 - `src/components`: Reusable UI components.
@@ -83,7 +83,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `prisma`: Database schema and migrations.
 - `public`: Static assets (images, icons).
 
-## 🛡️ Security
+##  Security
 
 -   **Password Hashing**: Uses BCrypt for secure storage.
 -   **Session Management**: JWT-based session handling via NextAuth.
