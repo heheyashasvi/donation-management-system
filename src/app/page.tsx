@@ -29,7 +29,7 @@ export default function Home() {
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="file:///C:/Users/kamal/.gemini/antigravity/brain/9e07113a-cc5d-427a-8a9e-f4e73017fcde/ngo_hero_child_1768777845890.png"
+                        src="/images/hero_child.png"
                         alt="Smiling child with book"
                         className="w-full h-full object-cover opacity-40"
                     />
@@ -109,7 +109,7 @@ export default function Home() {
                         <div className="relative group">
                             <div className="absolute -inset-4 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
                             <img
-                                src="file:///C:/Users/kamal/.gemini/antigravity/brain/9e07113a-cc5d-427a-8a9e-f4e73017fcde/ngo_impact_community_1768777863706.png"
+                                src="/images/impact_community.png"
                                 alt="Community Support"
                                 className="relative rounded-3xl shadow-2xl border border-white/5"
                             />
@@ -130,7 +130,7 @@ export default function Home() {
                         <div className="group space-y-6">
                             <div className="overflow-hidden rounded-3xl aspect-[4/3]">
                                 <img
-                                    src="file:///C:/Users/kamal/.gemini/antigravity/brain/9e07113a-cc5d-427a-8a9e-f4e73017fcde/ngo_education_hope_1768777879989.png"
+                                    src="/images/education_hope.png"
                                     alt="Education Project"
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
