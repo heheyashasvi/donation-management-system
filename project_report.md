@@ -1,19 +1,22 @@
 # Project Report: HopeConnect NGO Donation Platform
 
-## 1. System Architecture
+## 1. Executive Summary
 
-The HopeConnect platform is built using a modern, scalable web architecture designed to separate user registration data from donation processing, ensuring data integrity and allowing for independent management of users and payments.
+The HopeConnect platform is a robust, full-stack web application designed for non-governmental organizations to streamline user registrations and donation management. The primary objective of the project was to create a system where user record-keeping is decoupled from payment processing, ensuring that donor information is captured and preserved regardless of whether a financial transaction is completed.
 
-### 1.1 Tech Stack
-- **Frontend & Backend Framework**: Next.js 16 (App Router) - Provides server-side rendering, robust API routes, and secure server components.
-- **Language**: TypeScript - Ensures type safety and code reliability.
-- **Database**: SQLite (via Prisma ORM) - Lightweight, portable relational database for storing user and donation records.
-- **Data Access Layer**: Prisma ORM - Type-safe database client.
-- **Authentication**: NextAuth.js - Handles secure user sessions using Credentials provider (Email/Password) and JWT strategies.
-- **Payments**: Razorpay (Test Mode) - Handles secure payment processing via Orders and Client-side Checkout.
-- **Styling**: Tailwind CSS - Modern, responsive, and accessible UI design.
+## 2. System Architecture & Technical Stack
 
-### 1.2 Architecture Diagram (Conceptual)
+The architecture follows a modern, scalable approach using the Next.js App Router, combining frontend and backend capabilities within a single, unified codebase.
+
+### 2.1 Technical Specifications
+-   **Framework**: Next.js 16 (App Router) - Utilized for its superior server-side rendering (SSR) and built-in API routing.
+-   **Language**: TypeScript - Employed to ensure type safety across the entire application, reducing runtime errors and improving maintainability.
+-   **Database**: SQLite (via Prisma ORM) - A file-based relational database chosen for its portability and simplicity during development and small-scale deployment.
+-   **Authentication**: NextAuth.js - Handles secure user sessions with JSON Web Tokens (JWT) and BCrypt password hashing.
+-   **Payments**: Razorpay Integrated - Provides a secure, PCI-compliant payment gateway using server-side order creation and signature verification.
+-   **Styling**: Tailwind CSS & Lucide Icons - Used for creating a responsive, high-fidelity dark-themed user interface.
+
+### 2.2 Conceptual Architecture Flow
 ```mermaid
 graph TD
     User[User Client] -->|HTTPS| NextApp[Next.js Application]
@@ -22,76 +25,64 @@ graph TD
     API -->|Query| Prisma[Prisma ORM]
     Prisma -->|Read/Write| DB[(SQLite Database)]
     API -->|Create Order| Razorpay[Razorpay API]
-    Razorpay -->|Order ID| API
     User -->|Payment Info| RazorpayClient[Razorpay Modal]
     RazorpayClient -->|Verification| API
     API -->|Update Status| Prisma
 ```
 
-## 2. Database Schema
+## 3. Database Design & Data Integrity
 
-The database is designed to strictly separate `User` entities from `Donation` entities. A user exists independently of any donation.
+A critical requirement was to ensure user data persistence independent of payment outcomes. The database schema satisfies this via a clear separation of entities.
 
-### 2.1 Models
+### 3.1 Model Definitions
 
-#### User
-Stores registration information. Created immediately upon registration.
-- **id**: Unique Identifier (CUID)
-- **name**: User's full name
-- **email**: Unique email address
-- **password**: Hashed password (BCrypt)
-- **role**: Authorization level (`USER` or `ADMIN`)
-- **createdAt**: Timestamp of registration
+#### User Model
+Stores registration and account details.
+- `id`: CUID (Unique Identifier)
+- `name`: Full Name
+- `email`: Unique identifier for authentication.
+- `password`: Hashed string for security.
+- `role`: Authorization level (`USER` or `ADMIN`).
+- `donations`: One-to-many relationship with the Donation model.
 
-#### Donation
-Stores payment attempts and history. Linked to User but managed separately.
-- **id**: Unique Identifier (CUID)
-- **amount**: Donation amount in USD
-- **status**: Payment state (`PENDING`, `SUCCESS`, `FAILED`)
-- **stripeSessionId**: Reference to Razorpay Order ID (Note: Field name retained for schema stability)
-- **userId**: Foreign Key linking to User
-- **createdAt**: Timestamp of initiation
+#### Donation Model
+Stores individual transaction attempts.
+- `id`: Unique Identifier.
+- `amount`: Float value of the donation.
+- `status`: Lifecycle states (`PENDING`, `SUCCESS`, `FAILED`).
+- `currency`: Defaulted to "INR" for Razorpay integration.
+- `stripeSessionId`: Stores the external Payment/Order ID for cross-referencing.
 
-### 2.2 Data Integrity Rules
-1.  **Independent Registration**: Users register via `/register`. This creates a `User` record. No donation is required to be a registered user.
-2.  **Payment Tracking**: When a user clicks "Donate", a `Donation` record is created with status `PENDING`. This record persists even if the user closes the browser or the payment fails.
-3.  **Role-Based Access**: Admins are distinguished by the `role` field, granting access to `/dashboard/admin`.
+### 3.2 Integrity Rules
+1.  **Independent Creation**: Users are created at `/register` before any donation is initiated.
+2.  **State Persistence**: When a user initiates a donation, a `PENDING` record is created. This ensures the NGO has a record of the intent, allowing for follow-up if the payment is not completed.
+3.  **Atomic Updates**: Status changes from `PENDING` to `SUCCESS` only occur after cryptographic verification from the payment provider.
 
-## 3. Key Design Decisions
+## 4. Implementation Challenges & Solutions
 
-### 3.1 Separation of Concerns
-Registration and Donation flows are completely decoupled.
-- **Registration**: `/register` -> API -> DB (User created).
-- **Donation**: `/donate` -> API -> Razorpay Order.
-This ensures that "user data is saved regardless of payment outcome" as required.
+### 4.1 Payment Amount Precision
+**Challenge**: During the Razorpay integration, a mismatch was discovered where floating-point numbers in the currency (e.g., 10.50) caused the order creation to fail with an "Amount exceeded maximum" or "Invalid amount" error.
+**Solution**: Implemented a strict normalization utility that parses the input and uses `Math.round(amount * 100)` to ensure Razorpay receives an exact integer in paise, eliminating rounding errors.
 
-### 3.2 Secure Payment Handling
-- **No storage of card details**: All sensitivity payment data is handled by Razorpay's secure modal.
-- **Server-Side Order Creation**: Orders are created on the server to prevent amount manipulation.
-- **Signature Verification**: Payment success is verified on the server using HMAC-SHA256 signature verification. This prevents "fake success" by forcing valid cryptographic proof from Razorpay.
+### 4.2 Security & Signature Verification
+**Challenge**: Preventing users from spoofing successful payments by manually triggering the success API.
+**Solution**: Implemented server-side signature verification. The API expects a `razorpay_signature` which is verified against the `order_id` and `payment_id` using a HMAC-SHA256 algorithm with the secret key.
 
-### 3.3 Admin Visibility
-Admins have a dedicated dashboard that aggregates data directly from the verified database records.
-- **Total Donations**: Sum of only `SUCCESS` status donations.
-- **User Management**: verification of registration data.
+## 5. User Features & Interface
 
-## 4. Payment Flow & Rules
-1.  **Initiation**: User selects amount. System creates `PENDING` donation in DB and Razorpay Order.
-2.  **Processing**: User completes payment via Razorpay Modal.
-3.  **Completion**:
-    *   **Success**: Razorpay returns success signature. API verifies signature. System updates DB status to `SUCCESS`.
-    *   **Failure/Cancel**: User cancels. DB status remains `PENDING`.
-4.  **Verification**: Admin sees the status in real-time.
+### 5.1 Dynamic Dashboards
+-   **User Dashboard**: Displays a comprehensive "Impact" summary. It calculates and aggregates only "SUCCESS" status donations to give the user an accurate representation of their contributions.
+-   **Admin Dashboard**: Provides the NGO staff with a high-level overview of total funds raised and a complete list of all users and donation attempts, including pending ones.
 
-## 5. Security Measures
-- **Password Hashing**: BCrypt used for storing passwords.
-- **Environment Variables**: API keys and secrets stored in `.env`.
-- **Protected Routes**: Middleware and Server Session checks ensure only authenticated users access dashboards.
+### 5.2 Aesthetic Design
+The platform utilizes a "Dark Premium" aesthetic with glassmorphism effects and vibrant gradients. This design choice aims to build trust and provide a professional appearance for the NGO.
 
-## 6. User Features
+## 6. Future Recommendations
 
-### 6.1 User Profile
-A dedicated profile page (`/dashboard/profile`) provides a comprehensive view of the user's journey.
-- **Personal Details**: Displays Name, Email, Role, and Member Since date.
-- **Impact Summary**: Aggregates total donation amount across all successful transactions.
-- **Full-Width Design**: Utilizes a modern, responsive full-width layout for an immersive experience.
+1.  **Webhook Integration**: While client-side Verification is implemented, adding Stripe/Razorpay Webhooks would provide a fallback if a user closes their browser before the signature is verified.
+2.  **Email Notifications**: Integration with an SMTP service (e.g., Resend or SendGrid) to send automated donation receipts.
+3.  **Analytics**: Implementing a charting library (like Recharts) on the admin dashboard to visualize donation trends over time.
+
+---
+*Report Prepared for: NGO Donation Platform Project*
+*Date: January 19, 2026*
