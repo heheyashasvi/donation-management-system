@@ -19,9 +19,8 @@ export default async function ProfilePage() {
 
     if (!user) redirect("/login");
 
-    const totalDonated = user.donations.reduce((sum: number, d: any) =>
-        d.status === "SUCCESS" ? sum + d.amount : sum, 0
-    );
+    const successfulDonations = user.donations.filter((d: any) => d.status === "SUCCESS");
+    const totalDonated = successfulDonations.reduce((sum: number, d: any) => sum + d.amount, 0);
 
     return (
         <div className="h-full w-full space-y-6">
@@ -73,12 +72,12 @@ export default async function ProfilePage() {
 
                     <div className="relative z-10 mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div className="bg-gray-950/50 p-4 rounded-2xl border border-gray-800">
-                            <p className="text-gray-500 text-sm mb-1">Donations</p>
-                            <p className="text-2xl font-bold text-white">{user.donations.length}</p>
+                            <p className="text-gray-500 text-sm mb-1">Success</p>
+                            <p className="text-2xl font-bold text-white">{successfulDonations.length}</p>
                         </div>
                         <div className="bg-gray-950/50 p-4 rounded-2xl border border-gray-800">
-                            <p className="text-gray-500 text-sm mb-1">Average</p>
-                            <p className="text-2xl font-bold text-white">₹{(totalDonated / (user.donations.length || 1)).toFixed(0)}</p>
+                            <p className="text-gray-500 text-sm mb-1">Total</p>
+                            <p className="text-2xl font-bold text-white">₹{totalDonated.toLocaleString('en-IN')}</p>
                         </div>
                         <div className="bg-gray-950/50 p-4 rounded-2xl border border-gray-800">
                             <p className="text-gray-500 text-sm mb-1">Status</p>

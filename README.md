@@ -2,6 +2,9 @@
 
 HopeConnect is a modern, full-stack web application designed for non-governmental organizations (NGOs) to manage user registrations and donations seamlessly. The platform ensures that user record-keeping is decoupled from payment processing, guaranteeing that user data is preserved regardless of the transaction outcome.
 
+## Demo Video
+[https://drive.google.com/drive/folders/1JDvc6UVc_qV6D8SRiKBsxTbhJfXt6b4l?usp=sharing](https://drive.google.com/drive/folders/1JDvc6UVc_qV6D8SRiKBsxTbhJfXt6b4l?usp=sharing)
+
 ## Features
 
 - **User Authentication**: Secure registration and login using NextAuth.js.
@@ -22,56 +25,72 @@ HopeConnect is a modern, full-stack web application designed for non-governmenta
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-### Installation
+## Getting Started
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/heheyashasvi/donation-management-system.git
-    cd donation-management-system
-    ```
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd donation-management-system-1
+```
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+### 2. Install dependencies
+```bash
+npm install
+```
 
-3.  **Setup Environment Variables:**
-    Create a `.env` file in the root directory and add the following:
-    ```env
-    DATABASE_URL="file:./dev.db"
-    NEXTAUTH_SECRET="your-secret-key"
-    NEXTAUTH_URL="http://localhost:3000"
+### 3. Setup Environment Variables
+Create a `.env` file in the root directory and add the following:
+```env
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
 
-    # Razorpay Keys
-    RAZORPAY_KEY_ID="your-razorpay-key-id"
-    RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
-    NEXT_PUBLIC_RAZORPAY_KEY_ID="your-razorpay-key-id"
-    ```
+# Razorpay Keys
+RAZORPAY_KEY_ID="your-razorpay-key-id"
+RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+NEXT_PUBLIC_RAZORPAY_KEY_ID="your-razorpay-key-id"
 
-4.  **Database Initialization:**
-    ```bash
-    npx prisma generate
-    npx prisma db push
-    ```
+# Stripe Keys (Optional/Alternative)
+STRIPE_SECRET_KEY="your-stripe-secret-key"
+STRIPE_PUBLISHABLE_KEY="your-stripe-publishable-key"
+STRIPE_WEBHOOK_SECRET="your-stripe-webhook-secret"
+```
 
-5.  **Create Admin User (Optional):**
-    ```bash
-    node create_admin.js
-    ```
+### 4. Database Initialization
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-6.  **Run the application:**
-    ```bash
-    npm run dev
-    ```
+### 5. Create Admin User (Optional)
+```bash
+node create_admin.js
+```
 
-    Open [http://localhost:3000](http://localhost:3000) in your browser.
+### 6. Run the application
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+- `src/app`: Next.js pages and API routes.
+- `src/components`: Reusable UI components.
+- `src/lib`: Shared utilities (Prisma client, Razorpay config, etc.).
+- `prisma`: Database schema and migrations.
+- `public`: Static assets (images, icons).
+
+## Security
+
+- **Password Hashing**: Uses BCrypt for secure storage.
+- **Session Management**: JWT-based session handling via NextAuth.
+- **Payment Validation**: Server-side signature verification for all Razorpay transactions.
 
 ## License
 
