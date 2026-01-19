@@ -31,9 +31,7 @@ export async function POST(req: Request) {
 
         const order = await razorpay.orders.create(options);
 
-        // Update donation with order ID (using stripeSessionId field for now or adding a new field? 
-        // We'll reuse stripeSessionId to store the order ID for simplicity to avoid migration complexity in this quick switch, 
-        // or effectively treat it as a "paymentReferenceId")
+        // Update donation with order ID
         await prisma.donation.update({
             where: { id: donation.id },
             data: { stripeSessionId: order.id },

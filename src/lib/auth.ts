@@ -3,6 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
+/**
+ * NextAuth configuration options.
+ * Configures credentials provider and callbacks for JWT and session management.
+ */
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({

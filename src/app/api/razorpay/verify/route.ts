@@ -7,6 +7,7 @@ export async function POST(req: Request) {
         const { orderId, paymentId, signature } = await req.json();
 
         const body = orderId + "|" + paymentId;
+
         const expectedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
             .update(body.toString())

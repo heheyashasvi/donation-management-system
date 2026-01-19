@@ -1,3 +1,7 @@
+/**
+ * Script to create a default admin user for the application.
+ * Usage: node create_admin.js
+ */
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
