@@ -3,7 +3,7 @@
 HopeConnect is a modern, full-stack web application designed for non-governmental organizations (NGOs) to manage user registrations and donations seamlessly. The platform ensures that user record-keeping is decoupled from payment processing, guaranteeing that user data is preserved regardless of the transaction outcome.
 
 ## Demo Video
--https://drive.google.com/drive/folders/1JDvc6UVc_qV6D8SRiKBsxTbhJfXt6b4l?usp=sharing
+https://drive.google.com/drive/folders/1JDvc6UVc_qV6D8SRiKBsxTbhJfXt6b4l?usp=sharing
 ##  Features
 
 -   **User Authentication**: Secure registration and login using NextAuth.js.
@@ -91,6 +91,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 -   **Session Management**: JWT-based session handling via NextAuth.
 -   **Payment Validation**: Server-side signature verification for all Razorpay transactions.
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
