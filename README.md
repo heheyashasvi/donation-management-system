@@ -2,6 +2,8 @@
 
 HopeConnect is a modern, full-stack web application designed for non-governmental organizations (NGOs) to manage user registrations and donations seamlessly. The platform ensures that user record-keeping is decoupled from payment processing, guaranteeing that user data is preserved regardless of the transaction outcome.
 
+## Demo Video
+-https://drive.google.com/drive/folders/1JDvc6UVc_qV6D8SRiKBsxTbhJfXt6b4l?usp=sharing
 ##  Features
 
 -   **User Authentication**: Secure registration and login using NextAuth.js.
